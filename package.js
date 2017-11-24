@@ -57,6 +57,7 @@ function timeFun(){
 }
 //点击全选 checkbox全部选中  checkbox有一个未选中则全选不被勾选
 function allCheckFun(){
+    //全选按钮点击时
     $('.allCheck').click(function(){
       if ($('.allCheck').prop('checked')) {
         $('.allowCheck').prop('checked',true);
@@ -64,21 +65,25 @@ function allCheckFun(){
         $('.allowCheck').prop('checked',false);
       }
     })
+    //checkbox点击时
     $('.allowCheck').click(function(){
       console.log($('.allowCheck').index(this));
       var _this = $(this);
       if (_this.prop('checked')) {
         var i = 0;
         for (i = 0; i < $('.allowCheck').length; i++) {
+            //如果有checkbox未被点击，就跳出循环，在循环外面执行
           if (!$('.allowCheck').eq(i).prop('checked')) {
             console.log('i',i);
             break;
           }
+          //如果一直执行i等于所有的checkbox的长度-1的时候，说明最后一个checkbox也被选中，此时全选按钮要时勾选状态
           if (i == $('.allowCheck').length - 1) {
             $('.allCheck').prop('checked', true);
           }
         }
       } else {
+          //如果有一个checkbox被取消勾选，则全选按钮取消勾选
         $('.allCheck').prop('checked', false);
       }
     })
@@ -170,4 +175,48 @@ function getYearData(x){
         }
         return  Y+'-'+M+'-'+day;
     }
+}
+// 下拉菜单
+function dropList(){
+    $('.allowCl').click(function(){
+        var _this =$(this);
+        var nodeC = $(this).attr('class').split(' ')[0];
+        var allImg = _this.parent().find('.newsSelect');
+        var i = $('.allowCl').index(this);
+        if ($(this).next().css('display') == 'block') {
+            $('.dropList').eq(i).hide();
+            allImg.attr('src','../../images/input_select_close.png');
+        }else{
+            $('.dropList').hide();
+            $('.dropList').eq(i).show();
+            allImg.attr('src','../../images/input_select_open.png');
+        }
+        $('.dropList').eq(i).find('li').click(function(){
+            var _this = $(this);
+            var htm = _this.html();
+            if (htm == '需要') {
+                $('.pianoDiv').css('display','inline-block');
+            }else if(htm == '不需要'){
+                $('.pianoDiv').hide();
+            }
+            if (htm == '多图') {
+                $('.alertMess').css('display','inline-block');
+            }else if(htm == '单图'){
+                $('.alertMess').hide();
+            }
+            var id = _this.attr('abc');
+            _this.parent().prev().val(htm);
+            _this.parent().prev().attr('abc',id);
+        })
+        //点击document下拉菜单消失
+        setTimeout(function(){
+            $('body').on('click',function (event) {
+                if (event.target.className.indexOf(nodeC)!=0) {
+                    $('.dropList').eq(i).hide();
+                    allImg.attr('src','../../images/input_select_close.png');
+                    $('body').off('click');
+                }
+            });
+        },200)
+    })
 }
