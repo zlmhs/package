@@ -220,3 +220,36 @@ function dropList(){
         },200)
     })
 }
+//存储session
+function setSession(key,value){
+    sessionStorage.setItem(key,value);
+}
+//获取Session
+function getSession(key){
+    return sessionStorage.getItem(key);
+}
+//清除Seeion
+function clearSession() {
+    sessionStorage.clear();
+}
+//用户登录网站，两小时无任何操作，退出登录
+function checkUserFun(){
+    var maxTime = 2*60*60; // seconds  (2小时)
+    var time = maxTime;
+    $('body').on('keydown mousemove mousedown click scroll', function(e){
+        time = maxTime; // reset
+    });
+    var intervalId = setInterval(function(){
+        time--;
+        if(time <= 0) {
+            ShowInvalidLoginMessage();
+            clearInterval(intervalId);
+        }
+    },1000)
+    function ShowInvalidLoginMessage(){
+        clearSession();
+        alert('页面失效，请重新登录');
+        location.reload();
+    }
+}
+//
